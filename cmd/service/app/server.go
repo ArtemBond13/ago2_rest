@@ -5,8 +5,10 @@ import (
 	"fmt"
 	"github.com/ArtemBond13/ago2_rest/pkg/offers"
 	"github.com/go-chi/chi"
+	"go/ast"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type Server struct {
@@ -33,7 +35,7 @@ func (s *Server) ServerHTTP(writer http.ResponseWriter, reader *http.Request) {
 }
 
 // у Get нет тела (только path, query и заголовки)
-func (s *Server) handleGetOffers(writer http.ResponseWriter, request *http.Request) {
+func (s *Server) handleGetOffer(writer http.ResponseWriter, request *http.Request) {
 	items, err := s.offersSvc.All(request.Context())
 	if err != nil {
 		http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
@@ -54,8 +56,31 @@ func (s *Server) handleGetOffers(writer http.ResponseWriter, request *http.Reque
 	}
 }
 
-func (s *Server) handleGetOffersByID(writer http.ResponseWriter, reader *http.Request) {
-	fmt.Println("not implemented")
+func (s *Server) handleGetOffersByID(writer http.ResponseWriter, request *http.Request) {
+	idParam :=chi.URLParam(request, "id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+
+	item, err := s.offersSvc.ByID(request.Context(), id)
+	if err != nil {
+		log.Println(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	data,err := json.Marshal(item)
+	if err != nil {
+		log.Println(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	writer.Header().Set("Content-Type", "application/json")
+	_, err = writer.Write(data)
+	if err != nil {
+		log.Println(err)
+	}
 }
 
 func (s *Server) handleSaveOffer(writer http.ResponseWriter, reader *http.Request) {
