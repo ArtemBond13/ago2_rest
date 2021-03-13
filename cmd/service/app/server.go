@@ -15,7 +15,7 @@ type Server struct {
 	router    chi.Router
 }
 
-func NewServer(offersSvc *offers.Service, router chi.Router) *Server{
+func NewServer(offersSvc *offers.Service, router chi.Router) *Server {
 	return &Server{offersSvc: offersSvc, router: router}
 }
 
@@ -56,7 +56,7 @@ func (s *Server) handleGetOffer(writer http.ResponseWriter, request *http.Reques
 }
 
 func (s *Server) handleGetOffersByID(writer http.ResponseWriter, request *http.Request) {
-	idParam :=chi.URLParam(request, "id")
+	idParam := chi.URLParam(request, "id")
 	id, err := strconv.ParseInt(idParam, 10, 64)
 	if err != nil {
 		http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
@@ -69,7 +69,7 @@ func (s *Server) handleGetOffersByID(writer http.ResponseWriter, request *http.R
 		return
 	}
 
-	data,err := json.Marshal(item)
+	data, err := json.Marshal(item)
 	if err != nil {
 		log.Println(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
