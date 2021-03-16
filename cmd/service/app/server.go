@@ -2,7 +2,6 @@ package server
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/ArtemBond13/ago2_rest/pkg/offers"
 	"github.com/go-chi/chi"
 	"log"
@@ -111,5 +110,28 @@ func (s *Server) handleSaveOffer(writer http.ResponseWriter, request *http.Reque
 }
 
 func (s *Server) handleRemoveOfferByID(writer http.ResponseWriter, request *http.Request) {
-	fmt.Println("not implemented")
+	idParam := chi.URLParam(request, "id")
+	id, err := strconv.ParseInt(idParam, 10, 64)
+	if err != nil {
+		http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	item, err := s.offersSvc.Delete(request, id)
+	if err != nil {
+		http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	data, err := json.Marshal(item)
+	if err != nil {
+		http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		return
+	}
+
+	writer.Header().Set("Content-Type", "application/json")
+	_, err = writer.Write(data)
+	if err != nil {
+		log.Println(err)
+	}
 }
