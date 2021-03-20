@@ -60,7 +60,7 @@ func execute(addr string, dsn string) error {
 
 	server := &http.Server{
 		Addr:    addr,
-		Handler: application,
+		Handler: server.NewServer(offersSvc, mux),
 	}
 	return server.ListenAndServe()
 }

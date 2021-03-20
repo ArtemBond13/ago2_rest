@@ -101,3 +101,12 @@ func (s *Service) Save(ctx context.Context, itemToSave *Offer) (*Offer, error) {
 
 	return itemToSave, nil
 }
+
+func (s Service) Delete(ctx context.Context, id int64) (*Offer, error) {
+	var offer Offer
+	err := s.pool.QueryRow(
+		ctx,
+		`INSERT INTO offers (company, percent, comment) VALUES($1, $2, $3) RETURNING id`,
+		offer.Company, offer.Percent, offer.Comment,
+	).Scan(offer)
+}
