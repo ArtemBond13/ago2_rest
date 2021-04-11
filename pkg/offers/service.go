@@ -103,10 +103,22 @@ func (s *Service) Save(ctx context.Context, itemToSave *Offer) (*Offer, error) {
 }
 
 func (s Service) Delete(ctx context.Context, id int64) (*Offer, error) {
-	var offer Offer
-	err := s.pool.QueryRow(
+	//var offer Offer
+	offer := &Offer{ID: id}
+	tag, err := s.pool.Exec(
 		ctx,
-		`INSERT INTO offers (company, percent, comment) VALUES($1, $2, $3) RETURNING id`,
-		offer.Company, offer.Percent, offer.Comment,
-	).Scan(offer)
+		`DELETE FROM offers 
+			WHERE id = $1 
+			RETURNING id, company, percent, comment`,
+		offer.ID,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	if tag.RowsAffected() != 1{
+		return nil, errors.New("No rows deleted")
+	}
+
+	return offer, nil
 }
