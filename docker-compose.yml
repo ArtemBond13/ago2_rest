@@ -3,7 +3,7 @@ services:
   bankdb:
     image: postgres:12.3-alpine
     ports:
-    - 5432:5432
+    - 5332:5432
     environment:
       - POSTGRES_PASSWORD=pass
       - POSTGRES_USER=app
