@@ -15,7 +15,7 @@ import (
 const (
 	defaultPort = "9999"
 	defaultHost = "0.0.0.0"
-	defaultDSN  = "postgres://app:pass@localhost:5432/db"
+	defaultDSN = "postgres://app:pass@localhost:5332/db"
 )
 
 func main() {
@@ -28,12 +28,10 @@ func main() {
 	if !ok {
 		host = defaultHost
 	}
-
 	dsn, ok := os.LookupEnv("APP_DSN")
 	if !ok {
 		dsn = defaultDSN
 	}
-
 	if err := execute(net.JoinHostPort(host, port), dsn); err != nil {
 		os.Exit(1)
 	}

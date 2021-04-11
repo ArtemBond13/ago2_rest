@@ -28,8 +28,8 @@ func (s *Server) Init() error {
 	return nil
 }
 
-func (s *Server) ServerHTTP(writer http.ResponseWriter, reader *http.Request) {
-	s.router.ServeHTTP(writer, reader)
+func (s *Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	s.router.ServeHTTP(writer, request)
 }
 
 // у Get нет тела (только path, query и заголовки)
@@ -117,7 +117,7 @@ func (s *Server) handleRemoveOfferByID(writer http.ResponseWriter, request *http
 		return
 	}
 
-	item, err := s.offersSvc.Delete(request, id)
+	item, err := s.offersSvc.Delete(request.Context(), id)
 	if err != nil {
 		http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
