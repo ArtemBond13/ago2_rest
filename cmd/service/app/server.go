@@ -40,16 +40,7 @@ func (s *Server) handleGetOffer(writer http.ResponseWriter, request *http.Reques
 		return
 	}
 
-	// серилизуем
-	data, err := json.Marshal(items)
-	if err != nil {
-		http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
-
-	writer.Header().Set("Content-Type", "application/json")
-	_, err = writer.Write(data)
-	if err != nil {
+	if err = WriteAsJSON(writer, items); err != nil{
 		log.Println(err)
 	}
 }
@@ -68,15 +59,7 @@ func (s *Server) handleGetOffersByID(writer http.ResponseWriter, request *http.R
 		return
 	}
 
-	data, err := json.Marshal(item)
-	if err != nil {
-		log.Println(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
-
-	writer.Header().Set("Content-Type", "application/json")
-	_, err = writer.Write(data)
-	if err != nil {
+	if err = WriteAsJSON(writer, item); err != nil{
 		log.Println(err)
 	}
 }
@@ -96,15 +79,7 @@ func (s *Server) handleSaveOffer(writer http.ResponseWriter, request *http.Reque
 		return
 	}
 
-	data, err := json.Marshal(item)
-	if err != nil {
-		http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
-
-	writer.Header().Set("Content-Type", "application/json")
-	_, err = writer.Write(data)
-	if err != nil {
+	if err = WriteAsJSON(writer, item); err != nil{
 		log.Println(err)
 	}
 }
@@ -123,15 +98,7 @@ func (s *Server) handleRemoveOfferByID(writer http.ResponseWriter, request *http
 		return
 	}
 
-	data, err := json.Marshal(item)
-	if err != nil {
-		http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
-		return
-	}
-
-	writer.Header().Set("Content-Type", "application/json")
-	_, err = writer.Write(data)
-	if err != nil {
+	if err = WriteAsJSON(writer, item); err != nil{
 		log.Println(err)
 	}
 }
