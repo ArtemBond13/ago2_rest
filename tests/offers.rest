@@ -61,3 +61,6 @@ client.test("Request executed successfully", function() {
 });
 %}
 
+### DELETE
+
+DELETE http://localhost:9999/offers/{{offferId}}
