@@ -105,19 +105,15 @@ func (s *Service) Save(ctx context.Context, itemToSave *Offer) (*Offer, error) {
 func (s Service) Delete(ctx context.Context, id int64) (*Offer, error) {
 	//var offer Offer
 	offer := &Offer{ID: id}
-	tag, err := s.pool.Exec(
+	err := s.pool.QueryRow(
 		ctx,
 		`DELETE FROM offers 
 			WHERE id = $1 
 			RETURNING id, company, percent, comment`,
 		offer.ID,
-	)
+	).Scan(&offer.Company, &offer.Percent, &offer.Comment)
 	if err != nil {
 		return nil, err
-	}
-
-	if tag.RowsAffected() != 1{
-		return nil, errors.New("No rows deleted")
 	}
 
 	return offer, nil
